@@ -1,0 +1,16 @@
+{
+    "name": "rabrennie/ezfw",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Rabrennie",
+            "email": "rennierab@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "EZFW\\": "src/EZFW/"
+        }
+    },
+    "require": {}
+}
