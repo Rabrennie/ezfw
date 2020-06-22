@@ -20,9 +20,13 @@ class Kernel
 
     public function handle(Request $request)
     {
-        $cb = $this->router->resolve($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
-        $this->response->body = $cb();
-        return $this->response;
+        $cb = $this->router->resolve($request);
+
+        if (!isset($cb)) {
+            return $this->response->notFound('not found');
+        }
+
+        return $cb($request, $this->response);
     }
 
 }

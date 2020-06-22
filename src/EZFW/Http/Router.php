@@ -13,8 +13,8 @@ class Router
         $this->$method[$route] = $callback;
     }
 
-    public function resolve(string $method, string $url)
+    public function resolve(Request $request)
     {
-        return $this->$method[$url];
+        return $this->{$request->method}[$request->path];
     }
 }
