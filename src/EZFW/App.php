@@ -37,4 +37,9 @@ class App {
         $this->kernel->router->add(Router::METHOD_GET, $route, $callback);
     }
 
+    public function post(string $route, callable $callback)
+    {
+        $this->kernel->router->add(Router::METHOD_POST, $route, $callback);
+    }
+
 }
