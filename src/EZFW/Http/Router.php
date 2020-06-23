@@ -5,6 +5,7 @@ namespace EZFW\Http;
 class Router
 {
     public const METHOD_GET = "GET";
+    public const METHOD_POST = "POST";
 
     public $routeMap;
 
@@ -15,7 +16,6 @@ class Router
 
     public function add(string $method, string $route, callable $callback)
     {
-        // TODO: refactor and support different methods
         $routeParts = ['/', ...preg_split('/\//', $route, null, PREG_SPLIT_NO_EMPTY)];
 
         $currentRouteMap = $this->routeMap;
@@ -40,7 +40,7 @@ class Router
             }
 
             if (($currentRouteMap->isParameter || $currentRouteMap->routePart == $current) && $i == count($routeParts) - 1) {
-                $currentRouteMap->callback = $callback;
+                $currentRouteMap->methods[$method] = $callback;
                 break;
             }
         }
@@ -75,6 +75,6 @@ class Router
 
         }
 
-        return $currentRouteMap->callback;
+        return $currentRouteMap->methods[$request->method] ?? null;
     }
 }

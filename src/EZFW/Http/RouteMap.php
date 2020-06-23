@@ -6,7 +6,7 @@ class RouteMap {
     public array $children = [];
     public string $routePart = '';
     public bool $isParameter = false;
-    public $callback;
+    public $methods = [];
 
     public function __construct(string $routePart)
     {
