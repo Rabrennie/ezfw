@@ -26,7 +26,8 @@ class Kernel
             return $this->response->notFound('not found');
         }
 
-        return $cb($request, $this->response);
+        $this->response = $cb($request, $this->response);
+        return $this->response;
     }
 
 }
