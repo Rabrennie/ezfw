@@ -6,6 +6,7 @@ class Request {
 
     public string $method = 'GET';
     public string $path = '/';
+    public array $parameters = [];
 
     public function __construct()
     {
@@ -19,5 +20,10 @@ class Request {
     public static function current() : Request
     {
         return new self();
+    }
+
+    public function setParameter(string $name, $value)
+    {
+        $this->parameters[$name] = $value;
     }
 }
