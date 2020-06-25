@@ -33,23 +33,39 @@ class App
         $response->send();
     }
 
+    public function before(callable $callback)
+    {
+        $this->kernel->addBeforeMiddleware($callback);
+        return $this;
+    }
+
+    public function after(callable $callback)
+    {
+        $this->kernel->addAfterMiddleware($callback);
+        return $this;
+    }
+
     public function get(string $route, callable $callback)
     {
         $this->kernel->router->add(Router::METHOD_GET, $route, $callback);
+        return $this;
     }
 
     public function post(string $route, callable $callback)
     {
         $this->kernel->router->add(Router::METHOD_POST, $route, $callback);
+        return $this;
     }
 
     public function put(string $route, callable $callback)
     {
         $this->kernel->router->add(Router::METHOD_PUT, $route, $callback);
+        return $this;
     }
 
     public function delete(string $route, callable $callback)
     {
         $this->kernel->router->add(Router::METHOD_DELETE, $route, $callback);
+        return $this;
     }
 }
