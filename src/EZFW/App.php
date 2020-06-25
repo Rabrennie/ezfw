@@ -6,7 +6,8 @@ use EZFW\Http\Kernel;
 use EZFW\Http\Request;
 use EZFW\Http\Router;
 
-class App {
+class App
+{
 
     private static App $instance;
 
@@ -17,7 +18,7 @@ class App {
         $this->kernel = Kernel::boot();
     }
 
-    public static function boot() : App
+    public static function boot(): App
     {
         if (!isset(self::$instance)) {
             self::$instance = new self();
@@ -28,8 +29,8 @@ class App {
 
     public function handle(Request $request)
     {
-       $response = $this->kernel->handle($request);
-       $response->send();
+        $response = $this->kernel->handle($request);
+        $response->send();
     }
 
     public function get(string $route, callable $callback)
@@ -42,4 +43,13 @@ class App {
         $this->kernel->router->add(Router::METHOD_POST, $route, $callback);
     }
 
+    public function put(string $route, callable $callback)
+    {
+        $this->kernel->router->add(Router::METHOD_PUT, $route, $callback);
+    }
+
+    public function delete(string $route, callable $callback)
+    {
+        $this->kernel->router->add(Router::METHOD_DELETE, $route, $callback);
+    }
 }
