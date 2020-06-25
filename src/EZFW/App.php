@@ -33,15 +33,15 @@ class App
         $response->send();
     }
 
-    public function before(callable $callback)
+    public function before($middleware)
     {
-        $this->kernel->addBeforeMiddleware($callback);
+        $this->kernel->addBeforeMiddleware($middleware);
         return $this;
     }
 
-    public function after(callable $callback)
+    public function after($middleware)
     {
-        $this->kernel->addAfterMiddleware($callback);
+        $this->kernel->addAfterMiddleware($middleware);
         return $this;
     }
 

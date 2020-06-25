@@ -37,12 +37,12 @@ class Kernel
         return $this->response;
     }
 
-    public function addBeforeMiddleware(callable $middleware)
+    public function addBeforeMiddleware($middleware)
     {
         $this->beforeMiddleware[] = $middleware;
     }
 
-    public function addAfterMiddleware(callable $middleware)
+    public function addAfterMiddleware($middleware)
     {
         $this->afterMiddleware[] = $middleware;
     }
@@ -51,10 +51,20 @@ class Kernel
     {
         foreach ($middlewares as $middleware) {
             $callNext = false;
-            $middleware($request, $this->response, function (Request $request, Response $response) use (&$callNext) {
+            $next = function (Request $request, Response $response) use (&$callNext) {
                 $this->response = $response;
                 $callNext = true;
-            });
+            };
+
+            if (is_string($middleware) && class_exists($middleware)) {
+                $middlewareInstance = new $middleware;
+                $middlewareInstance->handle($request, $this->response, $next);
+                // TODO: check if middlewareInstance actually extends Middleware
+            } elseif (is_callable($middleware)) {
+                $middleware($request, $this->response, $next);
+            }
+
+            // TODO: throw exception if middleware doesn't exist
 
             if (!$callNext) {
                 break;
