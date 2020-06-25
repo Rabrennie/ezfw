@@ -7,6 +7,7 @@ class Request {
     public string $method = 'GET';
     public string $path = '/';
     public array $parameters = [];
+    public ?string $query;
 
     public function __construct()
     {
@@ -14,7 +15,10 @@ class Request {
         
         $parsed = parse_url($_SERVER['REQUEST_URI']);
         $this->path = $parsed['path'];
-        $this->query = $parsed['query'];
+
+        if (isset($parsed['query'])) {
+            $this->query = $parsed['query'];
+        }
     }
 
     public static function current() : Request
