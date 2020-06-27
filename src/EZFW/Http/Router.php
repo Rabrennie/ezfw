@@ -8,26 +8,25 @@ class Router
     public const METHOD_PUT = "PUT";
     public const METHOD_DELETE = "DELETE";
 
-    public $routeMap;
+    public RouteMap $routeMap;
 
     public function __construct()
     {
         $this->routeMap = new RouteMap('/');
     }
 
-    public function add(string $method, string $route, callable $callback)
+    public function add(string $method, string $route, callable $callback) : void
     {
-        $routeParts = ['/', ...preg_split('/\//', $route, null, PREG_SPLIT_NO_EMPTY)];
-
+        $routeParts = $this->getRouteParts($route);
         $currentRouteMap = $this->routeMap;
 
-        for ($i=0; $i < count($routeParts); $i++) { 
+        for ($i=0; $i < count($routeParts); $i++) {
             $current = $routeParts[$i];
 
             $found = false;
 
             foreach ($currentRouteMap->children as $child) {
-                if ($child->isParameter || $child->routePart == $current) {
+                if ($child->matches($current)) {
                     $currentRouteMap = $child;
                     $found = true;
                     break;
@@ -40,30 +39,31 @@ class Router
                 $currentRouteMap = $temp;
             }
 
-            if (($currentRouteMap->isParameter || $currentRouteMap->routePart == $current) && $i == count($routeParts) - 1) {
+            if ($currentRouteMap->matches($current) && $i == count($routeParts) - 1) {
                 $currentRouteMap->methods[$method] = $callback;
                 break;
             }
         }
     }
 
+    /**
+     * @param Request $request
+     * @return callable|null
+     */
     public function resolve(Request $request)
     {
-        $routeParts = ['/', ...preg_split('/\//', $request->path, null, PREG_SPLIT_NO_EMPTY)];
-
+        $routeParts = $this->getRouteParts($request->path);
         $currentRouteMap = $this->routeMap;
 
-        for ($i=0; $i < count($routeParts); $i++) { 
-            $current = $routeParts[$i];
-
+        foreach ($routeParts as $routePart) {
             $found = false;
 
             foreach ($currentRouteMap->children as $child) {
                 if ($child->isParameter) {
-                    $request->setParameter($child->routePart, $current);
+                    $request->setParameter($child->routePart, $routePart);
                 }
 
-                if ($child->isParameter || $child->routePart == $current) {
+                if ($child->matches($routePart)) {
                     $currentRouteMap = $child;
                     $found = true;
                     break;
@@ -73,9 +73,23 @@ class Router
             if (!$found) {
                 return null;
             }
-
         }
 
         return $currentRouteMap->methods[$request->method] ?? null;
+    }
+
+    /**
+     * @param string $uri
+     * @return String[]
+     */
+    protected function getRouteParts(string $uri) : array
+    {
+        $parts = preg_split('/\//', $uri, null, PREG_SPLIT_NO_EMPTY);
+
+        if ($parts === false) {
+            return ['/'];
+        }
+
+        return ['/', ...$parts];
     }
 }
