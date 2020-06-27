@@ -6,7 +6,7 @@ class RouteMap {
     public array $children = [];
     public string $routePart = '';
     public bool $isParameter = false;
-    public $methods = [];
+    public array $methods = [];
 
     public function __construct(string $routePart)
     {
@@ -20,8 +20,13 @@ class RouteMap {
         }
     }
 
-    public function addChild(RouteMap $route)
+    public function addChild(RouteMap $route) : void
     {
         $this->children[$route->routePart] = $route;
+    }
+
+    public function matches(string $routePart) : bool
+    {
+        return $this->isParameter || $this->routePart === $routePart;
     }
 }
