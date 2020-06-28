@@ -45,27 +45,27 @@ class App
         return $this;
     }
 
-    public function get(string $route, callable $callback)
+    public function get(string $route, $routeHandler)
     {
-        $this->kernel->router->add(Router::METHOD_GET, $route, $callback);
+        $this->kernel->router->add(Router::METHOD_GET, $route, $routeHandler);
         return $this;
     }
 
-    public function post(string $route, callable $callback)
+    public function post(string $route, $routeHandler)
     {
-        $this->kernel->router->add(Router::METHOD_POST, $route, $callback);
+        $this->kernel->router->add(Router::METHOD_POST, $route, $routeHandler);
         return $this;
     }
 
-    public function put(string $route, callable $callback)
+    public function put(string $route, $routeHandler)
     {
-        $this->kernel->router->add(Router::METHOD_PUT, $route, $callback);
+        $this->kernel->router->add(Router::METHOD_PUT, $route, $routeHandler);
         return $this;
     }
 
-    public function delete(string $route, callable $callback)
+    public function delete(string $route, $routeHandler)
     {
-        $this->kernel->router->add(Router::METHOD_DELETE, $route, $callback);
+        $this->kernel->router->add(Router::METHOD_DELETE, $route, $routeHandler);
         return $this;
     }
 }

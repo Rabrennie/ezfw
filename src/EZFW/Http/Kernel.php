@@ -24,12 +24,12 @@ class Kernel
     {
         $this->callMiddleware($this->beforeMiddleware, $request);
 
-        $cb = $this->router->resolve($request);
+        $routeHandler = $this->router->resolve($request);
 
-        if (!isset($cb)) {
+        if (!isset($routeHandler)) {
             $this->response->notFound('not found');
         } else {
-            $this->response = $cb($request, $this->response);
+            $this->response = $this->callRouteHandler($routeHandler, $request);
         }
 
         $this->callMiddleware($this->afterMiddleware, $request);
@@ -72,4 +72,16 @@ class Kernel
         }
     }
 
+    protected function callRouteHandler($callback, Request $request)
+    {
+        if (is_string($callback) && class_exists($callback)) {
+            $actionInstance = new $callback;
+            return $actionInstance->handle($request, $this->response);
+            // TODO: check if actionInstance actually extends Action
+        } elseif (is_callable($callback)) {
+            return $callback($request, $this->response);
+        }
+        // TODO: throw exception if couldn't run
+
+    }
 }

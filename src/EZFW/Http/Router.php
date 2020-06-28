@@ -15,7 +15,7 @@ class Router
         $this->routeMap = new RouteMap('/');
     }
 
-    public function add(string $method, string $route, callable $callback) : void
+    public function add(string $method, string $route, $routeHandler) : void
     {
         $routeParts = $this->getRouteParts($route);
         $currentRouteMap = $this->routeMap;
@@ -40,7 +40,7 @@ class Router
             }
 
             if ($currentRouteMap->matches($current) && $i == count($routeParts) - 1) {
-                $currentRouteMap->methods[$method] = $callback;
+                $currentRouteMap->methods[$method] = $routeHandler;
                 break;
             }
         }
