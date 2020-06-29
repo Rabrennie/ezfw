@@ -45,6 +45,15 @@ class App
         return $this;
     }
 
+    public function use($plugin)
+    {
+        if (is_string($plugin) && class_exists($plugin)) {
+            $pluginInstance = new $plugin();
+            $pluginInstance->boot($this);
+        }
+        return $this;
+    }
+
     public function get(string $route, $routeHandler)
     {
         $this->kernel->router->add(Router::METHOD_GET, $route, $routeHandler);
