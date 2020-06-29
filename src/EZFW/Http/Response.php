@@ -2,15 +2,15 @@
 
 namespace EZFW\Http;
 
-class Response {
-
+class Response
+{
     public string $body = "";
     public int $response_code = 200;
     public array $headers = [];
 
     public function send()
     {
-        foreach($this->headers as $key => $value) {
+        foreach ($this->headers as $key => $value) {
             header("{$key}: {$value}");
         }
         http_response_code($this->response_code);

@@ -82,6 +82,5 @@ class Kernel
             return $callback($request, $this->response);
         }
         // TODO: throw exception if couldn't run
-
     }
 }
